@@ -1,0 +1,65 @@
+#include <stdio.h>
+#define SIZE 6
+
+//in bubble sort we start from the end to compare
+
+int bubblesort(int *a, int size);
+int main() {
+
+    int array[]={23,78, 45, 8, 32, 56};
+
+    int number_of_comparison;
+
+    number_of_comparison=bubblesort(array,SIZE);
+    printf("Sorted list is: ");
+
+    for(int i=0;i<SIZE;i++){
+        printf(" [%d] ",array[i]);
+    }
+    printf("\n");
+    printf("Number of comparison is: %d",number_of_comparison);
+
+    return 0;
+}
+
+int bubblesort(int *a, int size){
+
+    int sorted=0;
+    int last=size-1;
+    int count_comparison=0;
+
+    for(int wall=0; (wall<last) && !sorted;wall++){//we initialized the wall to the beginning and it increments when we pass an element
+        sorted=1;
+        printf("PASS %d \n",wall+1);
+        printf("beginning position of the array before the pass: ");
+        for(int i=0;i<size;i++){
+            printf(" [%d] ",a[i]);
+        }
+        printf("\n");
+        for(int compare_index=last;compare_index>wall;compare_index--){
+            //we initialized compare_index to last, cuz we start from the end
+            // the loop executes when the compare index is larger than the wall as position, cuz when they overlaps each other then the list will be sorted since the left side of the wall is sorted part
+            //since we start from the last, compare index will decrement
+            if(*(a+(compare_index))<*(a+compare_index-1)){
+                //if left side element is bigger than the right side element we swap
+
+                int temp=*(a+compare_index);
+                *(a+compare_index)=*(a+(compare_index-1));
+                *(a+(compare_index-1))=temp;
+
+                for(int i=0;i<size;i++){
+                    printf(" [%d] ",a[i]);
+                }
+                printf("\n");
+                sorted=0;
+                //we change sorted to 0 which means that the list is not sorted yet.
+                // In the case index 7 is not less than index 6,the conditions doesnt hold and sorted value remains 1, which means the list is sorted and loop ends.
+            }
+            count_comparison++;
+
+        }
+
+    }
+    return count_comparison;
+
+}
