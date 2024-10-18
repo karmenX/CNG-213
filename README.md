@@ -1,2 +1,1 @@
-# CNG-223-workhseet-3
-solutions to the worksheet questions
+METU NCC CNG 223 Lecture's Worksheet Solutions
