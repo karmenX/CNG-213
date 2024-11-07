@@ -1,0 +1,231 @@
+/*Note that you are not allowed to use global declarations in this course!!!
+   We will be using List Record - Worksheet 5*/ #include <stdio.h> #include <stdlib.h>
+
+/*Node declaration of a Linked List*/
+struct Node
+{
+	int item;
+	struct Node* next;
+};
+
+/*Global variable declarations of Linked List*/ struct Node *list, *head,*tail; int length;
+
+/*Function signatures*/
+void MakeEmpty();
+void CreateList();
+void InsertNode(int);
+void PrintList(void);
+int SearchItem(int);
+int MinValue();
+int SumList(struct Node *);
+void RecursivePrintList(struct Node *);
+void ReversePrintList(struct Node *);
+struct Node* CopyList(struct Node *);
+struct Node* RecursiveCopyList(struct Node *); struct Node* DestroyList(struct Node *); struct Node* ReverseList(struct Node *); struct Node* RecursiveReverseList(struct Node *, struct Node *); int inner_product(struct Node *, struct Node *);
+
+int main()
+{
+	char command;
+	int exit = 0;
+     int a,b,found,min;
+	while (!exit)
+	{
+         printf("\n");
+         printf("-----------------------------\n");
+         printf("a: Make an empty Linked List\n");
+         printf("b: Create a linked list\n");
+         printf("c: Insert a node to the Linked List\n");
+         printf("d: Search the item in the list \n");
+         printf("e: Find the minimum value \n");
+		printf("x: Exit\n");
+		printf("Enter command: ");
+		scanf(" %c", &command);
+
+
+		switch (command)
+		{
+			case 'a':
+                 MakeEmpty();
+                 break;
+             case 'b':
+                 CreateList();
+                 break;
+             case 'c':
+                 printf("enter the value you want to insert: ");
+                 scanf("%d",&a);
+                 InsertNode(a);
+                 break;
+             case 'd':
+                 printf("enter the value you want to search: ");
+                 scanf("%d",&b);
+                 found=SearchItem(b);
+                 if(found!=-1)
+                     printf("The element is found in the location %d",found+1);
+                 else
+                     printf("The element is not in the list. ");
+                 printf("\n");
+                 break;
+             case 'e':
+                 min=MinValue();
+                 printf("The minimum value in the list is: %d",min);
+                 break;
+			case 'x':
+                 exit = 1;
+                 break;
+			default:
+                 printf("Command is not recognized!\n");
+                 break;
+		}
+	}
+	printf("\n");
+	return 0;
+}
+
+/*Make an empty Linked List*/
+void MakeEmpty(void)
+{
+    head=list=tail=NULL;
+     PrintList();
+}
+
+/*Create a Linked List*/
+void CreateList(void)
+{
+     struct Node *tmp;
+
+     list=NULL;
+     head=NULL;
+     tail=NULL;
+
+     int n,value;
+     printf("How many elements you want to enter? ");
+     scanf("%d",&n);
+
+     for(int i=0;i<n;i++) {
+         tmp = malloc(sizeof(struct Node *));
+         if (tmp == NULL) {
+             printf("not enough memory ");
+             exit(0);
+         }
+         if (list == NULL) {
+             printf("enter the value:  ");
+             scanf("%d", &value);
+             tmp->item = value;
+             tmp->next = NULL;
+             tail = tmp;
+             list = tmp;
+             head = tmp;
+
+         } else {
+             printf("enter the value: ");
+             scanf("%d", &value);
+             tmp->item = value;
+             tmp->next = NULL;
+             tail->next = tmp;
+             tail = tmp;
+         }
+         length++;
+     }
+     PrintList();
+}
+
+/*Insert a node to Linked List*/
+void InsertNode(int num)
+{
+     struct Node *temp;
+     temp= malloc(sizeof (struct Node *));
+     if(temp==NULL){
+         printf("The node can not created!");
+     }
+     temp->next=NULL;
+     temp->item=num;
+
+     if(list==NULL){
+         list=temp;
+         head=tail=temp;
+     }
+     else{
+         tail->next=temp;
+         tail=temp;
+     }
+     length++;
+     PrintList();
+}
+
+/*Display the elements of Linked List*/
+void PrintList(void)
+{
+     struct Node *p;
+	for(p=head;p!=NULL;p=p->next){
+         printf("%d",p->item);
+         if(p->next!=NULL)
+             printf("----->");
+     }
+     printf("\n");
+}
+
+
+/*A function that searches a value in a linked list*/ int SearchItem(int key) {
+     struct Node *temp;
+     int i=0;
+
+     for(temp=head;temp!=NULL;temp=temp->next){
+         if(temp->item==key)
+             return i;
+         else
+             i++;
+     }
+     return -1;
+
+}
+
+/*A function that traverses a linked list and returns the minimum value*/ int MinValue(void) {
+  	struct Node *tmp;
+      tmp=head;
+      int min=tmp->item;
+
+      for(tmp=head;tmp!=NULL;tmp=tmp->next){
+          if(tmp->item<min)
+              min=tmp->item;
+      }
+      return min;
+
+}
+
+/*A function that traverses a linked list and returns the sum of the values*/ int SumList(struct Node *p) {
+  	//TO BE COMPLETED
+}
+
+/*A function that prints the elements of a given linked list by using recursion*/ void RecursivePrintList(struct Node *p) {
+  	//TO BE COMPLETED
+}
+
+/*A function that prints the elements of a given linked list in reverse order by using recursion*/ void ReversePrintList(struct Node *p) {
+  	//TO BE COMPLETED
+}
+
+/*A function that takes a linked list and makes a copy of it - This function returns the pointer to the first element of the list as a result.*/ struct Node* CopyList(struct Node *p) {
+  	//TO BE COMPLETED
+}
+
+struct Node* RecursiveCopyList(struct Node *p) {
+  	//TO BE COMPLETED
+}
+
+/*A function that traverses a linked list and frees the memory occupied by the list elements one element at a time*/ struct Node* DestroyList(struct Node *p) {
+  	//TO BE COMPLETED
+}
+
+/*A function that takes a linked list and creates a new linked list where the elements of the original list appear in reverse order in the new list*/ struct Node* ReverseList(struct Node *p) {
+  	//TO BE COMPLETED
+}
+
+struct Node* RecursiveReverseList(struct Node *ptr, struct Node
+*previous)
+{
+  	//TO BE COMPLETED
+}
+
+/*A function that calculates the inner product of two linked lists*/ int inner_product(struct Node *list1, struct Node *list2) {
+  	//TO BE COMPLETED
+}
