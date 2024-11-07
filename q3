@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <stdlib.h>
+void pay_month(int dollars, int *twenties, int *tens, int *fives, int *ones);
+
+int main() {
+     int amount,twenties,tens,fives,ones;
+     printf("Enter the amount to pay:");
+     scanf("%d",&amount);
+     pay_month(amount,&twenties,&tens,&fives,&ones);
+     printf("You need to pay %d*$20 + %d*$10 + %d*$5 ",twenties,tens,fives);
+
+     return 0;
+}
+void pay_month(int dollars, int *twenties, int *tens, int *fives, int *ones){
+
+     *twenties=dollars/20;
+     *tens=(dollars-(*twenties*20))/10;
+     *fives=(dollars-(*twenties*20)-(*tens*10))/5;
+
+}
