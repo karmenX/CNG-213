@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int search (int *a, int n, int key);
+
+int main(){
+
+     int n,*a,searched,found;
+     char ch;
+
+     printf("How many elements you want to store (n)?");
+     scanf("%d",&n);
+
+     a= malloc(sizeof (int)*n);
+     if(a==NULL) {
+         printf("error creating the array.");
+         exit(1);
+     }
+
+     for(int i=0;i<n;i++){
+         printf("Enter a value to be stored:");
+         scanf("%d",(&*(a+i)));
+     }
+
+     do {
+         printf("Enter a value to be searched: ");
+         scanf( "%d",&searched);
+         found=search(a,n,searched);
+
+         if(found==0){
+             printf("This value does not exist\n");
+         }
+         if(found==1){
+             printf("This value exist\n");
+         }
+
+         printf("Search again (Y/N)?");
+         scanf(" %c",&ch);
+
+     }
+     while(ch=='Y');
+
+     return 0;
+}
+
+int search (int *a, int n, int key){
+
+         for (int i = 0; i < n; i++) {
+             if (*(a+i) == key) {
+                 return 1;
+             }
+         }
+         return 0;
+
+}
