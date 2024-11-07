@@ -1,0 +1,36 @@
+//not working
+#include <stdio.h>
+#include <stdlib.h>
+void populate_array(int *data, int size); void sort_array(int *data, int size); int median(int *data, int size);
+
+int main(){
+
+     int n;
+     int *a;
+
+     printf("How many elements you'll enter:");
+     scanf("%d",&n);
+
+     a=malloc(sizeof (int )*n);
+     if(a==NULL){
+         printf("error creating the array.");
+         exit(1);
+     }
+
+     for(int i=0;i<n;i++){
+         printf("the array: ");
+         printf("a[%d]: %d\t",i,*(a+i));
+     }
+     printf("\n");
+
+
+     return 0;
+}
+void populate_array(int *data, int size){
+
+     for(int i=0;i<size;i++){
+         printf("Enter the element: ");
+         scanf("%d",&(*(data+i)));
+     }
+
+}
