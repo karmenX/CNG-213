@@ -1,0 +1,59 @@
+#include <stdio.h>
+#define SIZE 8
+
+//we start the selection sort from the beginning
+
+int selectionsort(int *a, int size);
+int main() {
+
+    int array[]={7,8, 26, 44, 13, 23, 98, 57};
+
+    int number_of_comparison;
+
+    number_of_comparison=selectionsort(array,SIZE);
+    printf("Sorted list is: ");
+
+    for(int i=0;i<SIZE;i++){
+        printf(" [%d] ",array[i]);
+    }
+    printf("\n");
+    printf("Number of comparison is: %d",number_of_comparison);
+
+    return 0;
+}
+
+int selectionsort(int *a, int size){
+
+    int count_comparison=0;
+    
+    for(int sorted_index=0; sorted_index<size ;sorted_index++){
+        //sorted_index is here is the wall that we initialized to the beginning
+        //in the sorted part of the array, we don't do any executions.
+
+        int min=sorted_index;
+        //we initialized min value to the sorted index so when we say a[min] it'll compare with the element at the position that is min
+        int temp=*(a+sorted_index);
+        printf("PASS %d \n",sorted_index+1);
+        for(int i=0;i<size;i++){
+            printf(" [%d] ",a[i]);
+        }
+        printf("\n");
+
+        for(int compare_index=sorted_index+1; compare_index<size ;compare_index++){
+            //we initialized compare_index to sorted_index+1 because we'll compare the element which is next to the wall(right side)
+
+            if(a[compare_index]<a[min]) {
+                //we compare the unsorted array elements with the element as accepted a[min](which is the first element on the right side of the wall
+                //if we find an element which is smaller than the a[min] element we change their positions
+                min= compare_index;
+            }
+            count_comparison++;
+
+        }
+        //we swap the positions of the compared elements
+        *(a+sorted_index)=*(a+min);
+        *(a+min)=temp;
+    }
+    
+    return count_comparison;
+}
