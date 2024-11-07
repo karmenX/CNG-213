@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+void find_largest_smallest (int a[], int n, int *largest, int *smallest);
+
+int main() {
+
+     int *a;
+     int size,largest=0,smallest=0;
+
+     printf("How many elements you want to store (n)?");
+     scanf("%d",&size);
+     a= malloc(size*sizeof(int *));
+     if(a==NULL){
+         printf("error creating the array!");
+     }
+     for(int i=0;i<size;i++){
+         printf("Enter a value to be stored: ");
+         scanf("%d",(a+i));
+
+     }
+
+     for(int i=0;i<size;i++){
+         printf(" %d\t",*(a+i));
+     }
+     printf("\n");
+     find_largest_smallest(a,size,&largest,&smallest);
+     printf("Largest value stored is %d and the smallest is %d.",largest,smallest);
+
+     free(a);
+
+     return 0;
+}
+void find_largest_smallest (int a[], int n, int *largest, int *smallest){
+
+     *largest=a[0];
+     *smallest=a[0];
+
+     for(int i=0;i<n-1;i++){
+         if(*(a+i)<*(a+1+i))
+             *largest=*(a+1+i);
+         if(*(a+i+1)<*(a+i))
+             *smallest=*(a+i+1);
+
+     }
+
+}
