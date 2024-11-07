@@ -1,0 +1,129 @@
+/*Note that you are not allowed to use global declarations in this course!!!
+   We will be using List Record - Worksheet 5*/ #include <stdio.h> #include <stdlib.h>
+
+/*Node declaration of a Linked List*/
+struct Node
+{
+	int val;
+	struct Node* next;
+};
+
+/*Global variable declarations of Linked List*/ struct Node *listStatic, *headStatic,*tailStatic; struct Node *listDynamic, *headDynamic,*tailDynamic; int lengthStatic=0,lengthDynamic=0;
+
+/*Function signatures*/
+void StaticBuild1234(void);
+void DynamicBuild1234(void);
+void PrintList(struct Node*);
+
+int main()
+{
+	char command;
+	int exit = 0;
+
+	while (!exit)
+	{
+		printf("a: Static Build\n");
+		printf("d: Dynamic Build\n");
+		printf("x: Exit\n");
+		printf("Enter command: ");
+		scanf("%c", &command);
+		fflush(stdin);
+
+		switch (command)
+		{
+		case 'a':
+			    StaticBuild1234();
+				break;
+		case 'd':
+				DynamicBuild1234();
+				break;
+		case 'x':
+				exit = 1;
+				break;
+		default:
+				printf("Command is not recognized!\n");
+				break;
+		}
+	}
+
+	printf("\n");
+	system("PAUSE");
+	return 0;
+}
+
+/*A function that builds a linked list containing four elements by using static memory allocation*/ void StaticBuild1234(void) {
+	struct Node node1, node2, node3, node4;
+
+	listStatic = &node1;
+	headStatic = &node1;
+
+	node1.val = 4;
+	node1.next = &node2;
+	lengthStatic++;
+
+	node2.val = 5;
+	node2.next = &node3;
+	lengthStatic++;
+
+	node3.val = 7;
+	node3.next = &node4;
+	lengthStatic++;
+
+	node4.val = 6;
+	node4.next = NULL;
+	lengthStatic++;
+
+	tailStatic = &node4;
+
+	PrintList(listStatic);
+}
+
+/*A function that traverses a linked list and prints the values*/ void PrintList(struct Node *p) {
+      for(p=headDynamic;p!=NULL;p=p->next){
+          printf("%d",p->val);
+          if(p->next!=NULL)
+              printf("----->");
+      }
+     printf("\n");
+
+}
+
+/*A function that builds a linked list containing four elements by using dynamic memory allocation*/ void DynamicBuild1234(void) {
+     struct Node *tmp;
+
+     listDynamic=NULL;
+     headDynamic=NULL;
+     tailDynamic=NULL;
+
+     int n,value;
+     printf("How many elements you want to enter? ");
+     scanf("%d",&n);
+
+     for(int i=0;i<n;i++) {
+         tmp = malloc(sizeof(struct Node *));
+         if (tmp == NULL) {
+             printf("not enough memory ");
+             exit(0);
+         }
+         if (listDynamic == NULL) {
+             printf("enter the value:  ");
+             scanf("%d", &value);
+             tmp->val = value;
+             tmp->next = NULL;
+             tailDynamic = tmp;
+             listDynamic = tmp;
+             headDynamic = tmp;
+             lengthStatic++;
+         } else {
+             printf("enter the value: ");
+             scanf("%d", &value);
+             tmp->val = value;
+             tmp->next = NULL;
+             tailDynamic->next = tmp;
+             tailDynamic = tmp;
+             lengthStatic++;
+         }
+     }
+     PrintList(listDynamic);
+
+}
