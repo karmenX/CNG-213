@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <math.h>
+void calculate_volume_surface(double radius, double *volume, double *surface);
+
+int main() {
+     double radius=3;
+     double volume;
+     double surface;
+     calculate_volume_surface(radius,&volume,&surface);
+     printf("the volume of the sphere is: %.2f\n the surface of the sphere is: %.2f",volume,surface);
+
+     return 0;
+}
+void calculate_volume_surface(double radius, double *volume, double *surface){
+
+     *volume= (4/3) *3* pow(radius,3);
+     *surface=4*3* pow(radius,2);
+
+}
