@@ -1,0 +1,66 @@
+#include <stdio.h>
+#define SIZE 8
+
+//we start the insertion sort from the position 1
+
+int insertionsort(int *a, int size);
+int main() {
+
+    int array[]={7,8, 26, 44, 13, 23, 98, 57};
+
+    int number_of_comparison;
+
+    number_of_comparison=insertionsort(array,SIZE);
+    printf("Sorted list is: ");
+
+    for(int i=0;i<SIZE;i++){
+        printf(" [%d] ",array[i]);
+    }
+    printf("\n");
+    printf("Number of comparison is: %d",number_of_comparison);
+
+    return 0;
+}
+
+int insertionsort(int *a, int size){
+
+    int count_comparison=0,compare_index;
+
+    for(int sorted_index=1; sorted_index<size ;sorted_index++){
+        //sorted_index is here is the wall that we initialized to the position after the first element
+        //we actually take the first element into the sorted list by doing this
+
+        int temp=*(a+sorted_index);//we initialize temp to the last element of the sorted list
+
+        for(compare_index=sorted_index; compare_index>0 && temp< *(a+compare_index-1) ;compare_index--){
+            //we initialized compare_index to sorted_index because we first take the element into the sorted list and then put it to the correct position
+            //we compare the temp(last element in the sorted list) with the previous element, if last one is smaller we swap
+
+            *(a+compare_index)=*(a+(compare_index-1));
+
+            //explanation of how this loop works:
+            // we compare the compare index and the temp, if compare index is smaller than temp we copy the value of the compare index-1 to compare index as you can observe there are 2 44 and 26
+            //then we decrement the compare index, one by one we apply the same condition
+            //the loop stops when compare index value is not smaller than compare index-1 value
+            // [7]  [8]  [26]  [44]  [44]  [23]  [98]  [57]
+            // [7]  [8]  [26]  [26]  [44]  [23]  [98]  [57]
+            // [7]  [8]  [13]  [26]  [44]  [44]  [98]  [57]
+
+            count_comparison++;
+
+        }
+        //since the temp value didn't change, we assign the value which holds the element we wanted to sort, to where compare index stopped through the loop
+        *(a+compare_index)=temp;
+        count_comparison++;
+
+        printf("PASS %d \n",sorted_index);
+        printf("beginning position of the array before the pass: ");
+        for(int i=0;i<size;i++){
+            printf(" [%d] ",a[i]);
+        }
+        printf("\n");
+
+    }
+    return count_comparison;
+
+}
