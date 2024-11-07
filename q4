@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void get_poly(double **coeff, int* degreep); double eval_poly(double coeff[], int degree, double x);
+
+
+int main() {
+
+     double *coefficient;
+     int degree;
+     srand(time(NULL));
+
+
+     get_poly(&coefficient,&degree);
+
+
+     free(coefficient);
+     return 0;
+}
+void get_poly(double **coeff, int* degreep){
+
+     *degreep=rand()%8;
+
+     *coeff= malloc(sizeof (double *)*(*degreep+1));
+     if(*coeff=NULL){
+         printf("error creating the coeff array!");
+         exit(1);
+     }
+     for(int i=0;i<*degreep;i++){
+         (*coeff)[i]=(rand()%10)+1;
+     }
+
+     printf("p(x)=");
+     for(int i=0;i<=*degreep;i++){
+         printf("%.3f*x^%d ",(*coeff)[i],i);
+         if(i<*degreep){
+             printf("+");
+         }
+
+     }
+
+
+
+}
