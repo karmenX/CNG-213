@@ -31,7 +31,7 @@ int bubblesort(int *a, int size){
     for(int wall=0; (wall<last) && !sorted;wall++){//we initialized the wall to the beginning and it increments when we pass an element
         sorted=1;
         printf("PASS %d \n",wall+1);
-        printf("beginning position of the array before the pass: ");
+        printf("beginning order of the array before the pass: ");
         for(int i=0;i<size;i++){
             printf(" [%d] ",a[i]);
         }
