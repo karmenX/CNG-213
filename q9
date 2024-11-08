@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void intertwine(char *word1, char *word2, char *result);
+
+int main(){
+
+    char *word1,*word2;
+    int len1,len2;
+    printf("Enter the first word: ");
+    word1= malloc(sizeof(char )*100);
+    if(word1==NULL){
+        printf("Error allocating memory for word1.");
+        exit(1);
+    }
+    scanf("%99s",word1);
+    len1= strlen(word1);
+
+    printf("Enter the second word: ");
+    word2= malloc(sizeof(char )*100);
+
+    if(word2==NULL){
+        printf("Error allocating memory for word2.");
+        exit(1);
+    }
+
+    scanf("%99s",word2);
+    len2= strlen(word2);
+
+    char *result= malloc(sizeof(char )*(len1+len2+1));
+    if(result==NULL){
+        printf("Error allocating result memory.");
+        exit(1);
+    }
+
+    intertwine(word1,word2,result);
+    printf("Intertwine result is %s",result);
+
+    free(word1);
+    free(word2);
+    free(result);
+
+    return 0;
+}
+
+void intertwine(char *word1, char *word2, char *result){
+
+    int i=0,j=0,k=0;
+
+    while(word1[i]!='\0' && word2[j]!='\0'){
+        result[k++]=word1[i++];
+        result[k++]=word2[j++];
+    }
+    while(word1[i]!='\0') {
+        result[k++] = word1[i++];
+    }
+    while(word2[j]!='\0') {
+        result[k++] = word2[j++];
+    }
+
+
+    result[k]='\0';
+
+
+}
