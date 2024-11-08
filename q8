@@ -1,36 +1,74 @@
-//not working
 #include <stdio.h>
 #include <stdlib.h>
-void populate_array(int *data, int size); void sort_array(int *data, int size); int median(int *data, int size);
+
+void populate_array(int *data, int size);
+void sort_array(int *data, int size);
+int median(int *data, int size);
 
 int main(){
 
-     int n;
-     int *a;
+    int size;
+    printf("How many number will you enter: ");
+    scanf("%d",&size);
 
-     printf("How many elements you'll enter:");
-     scanf("%d",&n);
+    int *array;
+    array=malloc(sizeof(int)*size);
+    if(array==NULL){
+        printf("Error allocating the array.");
+        exit(1);
+    }
+    populate_array(array,size);
+    for(int i=0;i<size;i++){
+        printf("%d ",array[i]);
+    }
+    printf("\n");
+    sort_array(array,size);
+    for(int i=0;i<size;i++){
+        printf("%d ",array[i]);
+    }
+    printf("\n");
+    int median_number;
+    median_number= median(array,size);
+    printf("The median is: %d",median_number);
 
-     a=malloc(sizeof (int )*n);
-     if(a==NULL){
-         printf("error creating the array.");
-         exit(1);
-     }
+    free(array);
 
-     for(int i=0;i<n;i++){
-         printf("the array: ");
-         printf("a[%d]: %d\t",i,*(a+i));
-     }
-     printf("\n");
-
-
-     return 0;
+    return 0;
 }
-void populate_array(int *data, int size){
 
-     for(int i=0;i<size;i++){
-         printf("Enter the element: ");
-         scanf("%d",&(*(data+i)));
-     }
+void populate_array(int *data, int size) {
+
+    printf("enter the number list: ");
+
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &data[i]);
+    }
 
 }
+
+void sort_array(int *data,int size) {//bubble sort
+
+    int sorted=0;
+
+    for(int i=0;i<size && !sorted;i++){
+        sorted=1;
+        for(int j=size;j>i;j--){
+            if(data[j-1]>data[j]) {
+                int temp = data[j];
+                data[j] = data[j - 1];
+                data[j - 1] = temp;
+            }
+            sorted=0;
+
+            }
+        }
+}
+int median(int *data,int size){
+
+    int left_side=0;
+    int right_side=size-1;
+    int middle=(right_side+left_side)/2;
+
+    return data[middle];
+}
+
