@@ -11,6 +11,7 @@ struct songNode {
 
 struct songNode* addSong(struct songNode *p);
 void displayPopularSongs(struct songNode *p);
+void freelist(struct songNode *p);
 
 int main() {
     char command;
@@ -39,7 +40,7 @@ int main() {
                 break;
         }
     }
-
+    freelist(songList);
     return 0;
 }
 
@@ -71,29 +72,21 @@ struct songNode* addSong(struct songNode *p) {
         scanf("%d", &tmp->downloads[i]);
     }
 
-    tmp->next = NULL;
+    tmp->next = p;
 
-    // Add new song to the end of the list
-    if (p == NULL) {
-        return tmp;
-    }
-
-    struct songNode *current = p;
-    while (current->next != NULL) {
-        current = current->next;
-    }
-    current->next = tmp;
-
-    return p;
+    return tmp;
 }
 
 void displayPopularSongs(struct songNode *p) {
+
+    struct songNode *mostpopularsong=NULL;
+
     if (p == NULL) {
         printf("No songs in the list.\n");
         return;
     }
 
-    int total = 0;
+    int popular=0,total=0;
     printf("\nPopular Songs:\n");
     while (p != NULL) {
         int sum = 0;
@@ -102,9 +95,34 @@ void displayPopularSongs(struct songNode *p) {
             printf("Month %d: %d ", i + 1, p->downloads[i]);
             sum += p->downloads[i];
         }
-        total += sum;
+
         printf("\nTotal downloads for this song: %d\n\n", sum);
+
+        if(sum>popular){
+            popular=sum;
+            mostpopularsong=p;
+        }
+        total += sum;
         p = p->next;
     }
     printf("Total downloads of popular songs: %d\n", total);
+    if(mostpopularsong!=NULL)
+        printf("Most popular song is %s with rating %.2f and total downloads %d",mostpopularsong->name,mostpopularsong->rating,popular);
+
+
+
+}
+
+void freelist(struct songNode *p){
+
+    struct songNode *temp;
+    while(p!=NULL){
+        temp=p;
+        free(temp->downloads);
+        free(temp->name);
+        free(temp);
+        p=p->next;
+    }
+
+
 }
