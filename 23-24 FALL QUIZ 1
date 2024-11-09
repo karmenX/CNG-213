@@ -4,7 +4,7 @@
 // Node declaration for a linked list
 struct songNode {
     char *name;
-    float *rating;
+    float rating;
     int *downloads;
     struct songNode *next;
 };
@@ -58,13 +58,8 @@ struct songNode* addSong(struct songNode *p) {
     printf("Please enter the name of the song: ");
     scanf("%99s", tmp->name);
 
-    tmp->rating = malloc(sizeof(float));
-    if (tmp->rating == NULL) {
-        printf("Error allocating memory for the song rating.\n");
-        exit(1);
-    }
     printf("Please enter the overall rating: ");
-    scanf("%f", tmp->rating);
+    scanf("%f", &tmp->rating);
 
     tmp->downloads = malloc(sizeof(int) * 5);
     if (tmp->downloads == NULL) {
@@ -102,7 +97,7 @@ void displayPopularSongs(struct songNode *p) {
     printf("\nPopular Songs:\n");
     while (p != NULL) {
         int sum = 0;
-        printf("Name: %s, Rating: %.2f, Downloads:\n", p->name, *p->rating);
+        printf("Name: %s, Rating: %.2f, Downloads:\n", p->name, p->rating);
         for (int i = 0; i < 5; i++) {
             printf("Month %d: %d ", i + 1, p->downloads[i]);
             sum += p->downloads[i];
