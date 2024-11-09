@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node declaration for a linked list
+struct songNode {
+    char *name;
+    float *rating;
+    int *downloads;
+    struct songNode *next;
+};
+
+struct songNode* addSong(struct songNode *p);
+void displayPopularSongs(struct songNode *p);
+
+int main() {
+    char command;
+    struct songNode *songList = NULL;
+    int exit_ = 0;
+
+    while (!exit_) {
+        printf("\n1. Add a song\n");
+        printf("2. Display popular songs\n");
+        printf("3. Exit\n");
+        printf("Enter command: ");
+        scanf(" %c", &command);
+
+        switch (command) {
+            case '1':
+                songList = addSong(songList);
+                break;
+            case '2':
+                displayPopularSongs(songList);
+                break;
+            case '3':
+                exit_ = 1;
+                break;
+            default:
+                printf("Unrecognized command.\n");
+                break;
+        }
+    }
+
+    return 0;
+}
+
+struct songNode* addSong(struct songNode *p) {
+    struct songNode *tmp = malloc(sizeof(struct songNode));
+    if (tmp == NULL) {
+        printf("Error allocating memory for the new song node.\n");
+        exit(1);
+    }
+
+    tmp->name = malloc(sizeof(char) * 100);
+    if (tmp->name == NULL) {
+        printf("Error allocating memory for the song name.\n");
+        exit(1);
+    }
+    printf("Please enter the name of the song: ");
+    scanf("%99s", tmp->name);
+
+    tmp->rating = malloc(sizeof(float));
+    if (tmp->rating == NULL) {
+        printf("Error allocating memory for the song rating.\n");
+        exit(1);
+    }
+    printf("Please enter the overall rating: ");
+    scanf("%f", tmp->rating);
+
+    tmp->downloads = malloc(sizeof(int) * 5);
+    if (tmp->downloads == NULL) {
+        printf("Error allocating memory for downloads.\n");
+        exit(1);
+    }
+    printf("Enter the number of downloads in the last five months:\n");
+    for (int i = 0; i < 5; i++) {
+        scanf("%d", &tmp->downloads[i]);
+    }
+
+    tmp->next = NULL;
+
+    // Add new song to the end of the list
+    if (p == NULL) {
+        return tmp;
+    }
+
+    struct songNode *current = p;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = tmp;
+
+    return p;
+}
+
+void displayPopularSongs(struct songNode *p) {
+    if (p == NULL) {
+        printf("No songs in the list.\n");
+        return;
+    }
+
+    int total = 0;
+    printf("\nPopular Songs:\n");
+    while (p != NULL) {
+        int sum = 0;
+        printf("Name: %s, Rating: %.2f, Downloads:\n", p->name, *p->rating);
+        for (int i = 0; i < 5; i++) {
+            printf("Month %d: %d ", i + 1, p->downloads[i]);
+            sum += p->downloads[i];
+        }
+        total += sum;
+        printf("\nTotal downloads for this song: %d\n\n", sum);
+        p = p->next;
+    }
+    printf("Total downloads of popular songs: %d\n", total);
+}
