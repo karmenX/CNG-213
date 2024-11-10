@@ -1,231 +1,307 @@
 /*Note that you are not allowed to use global declarations in this course!!!
-   We will be using List Record - Worksheet 5*/ #include <stdio.h> #include <stdlib.h>
+  We will be using List Record - Worksheet 5*/
+#include <stdio.h>
+#include <stdlib.h>
 
 /*Node declaration of a Linked List*/
 struct Node
 {
-	int item;
-	struct Node* next;
+    int item;
+    struct Node* next;
 };
 
-/*Global variable declarations of Linked List*/ struct Node *list, *head,*tail; int length;
+/*Global variable declarations of Linked List*/
+struct Node *list, *head,*tail;
+int length;
 
 /*Function signatures*/
 void MakeEmpty();
 void CreateList();
 void InsertNode(int);
-void PrintList(void);
+void PrintList();
 int SearchItem(int);
 int MinValue();
 int SumList(struct Node *);
 void RecursivePrintList(struct Node *);
 void ReversePrintList(struct Node *);
 struct Node* CopyList(struct Node *);
-struct Node* RecursiveCopyList(struct Node *); struct Node* DestroyList(struct Node *); struct Node* ReverseList(struct Node *); struct Node* RecursiveReverseList(struct Node *, struct Node *); int inner_product(struct Node *, struct Node *);
+struct Node* RecursiveCopyList(struct Node *);
+struct Node* DestroyList(struct Node *);
+struct Node* ReverseList(struct Node *);
+struct Node* RecursiveReverseList(struct Node *, struct Node *);
+int inner_product(struct Node *, struct Node *);
 
-int main()
-{
-	char command;
-	int exit = 0;
-     int a,b,found,min;
-	while (!exit)
-	{
-         printf("\n");
-         printf("-----------------------------\n");
-         printf("a: Make an empty Linked List\n");
-         printf("b: Create a linked list\n");
-         printf("c: Insert a node to the Linked List\n");
-         printf("d: Search the item in the list \n");
-         printf("e: Find the minimum value \n");
-		printf("x: Exit\n");
-		printf("Enter command: ");
-		scanf(" %c", &command);
+int main(){
+    char command;
+    int value;
+    int exit = 0;
+    while (!exit)
+    {
+        fflush(stdin);
+        printf("a: Create a linked list\n");
+        printf("b: Print linked list\n");
+        printf("c: Search item\n");
+        printf("d: Minimimum value\n");
+        printf("e: Sum of elements in the list\n");
+        printf("f: print the list with recursive function\n");
+        printf("g: print the list in reverse order\n");
+        printf("h: copy list\n");
+        printf("k: copy the list with recursive function\n");
+        printf("l: destroy the linked list\n");
+        printf("x: Exit\n");
+        printf("Enter command: ");
+        scanf(" %c", &command);
+        fflush(stdin);
 
-
-		switch (command)
-		{
-			case 'a':
-                 MakeEmpty();
-                 break;
-             case 'b':
-                 CreateList();
-                 break;
-             case 'c':
-                 printf("enter the value you want to insert: ");
-                 scanf("%d",&a);
-                 InsertNode(a);
-                 break;
-             case 'd':
-                 printf("enter the value you want to search: ");
-                 scanf("%d",&b);
-                 found=SearchItem(b);
-                 if(found!=-1)
-                     printf("The element is found in the location %d",found+1);
-                 else
-                     printf("The element is not in the list. ");
-                 printf("\n");
-                 break;
-             case 'e':
-                 min=MinValue();
-                 printf("The minimum value in the list is: %d",min);
-                 break;
-			case 'x':
-                 exit = 1;
-                 break;
-			default:
-                 printf("Command is not recognized!\n");
-                 break;
-		}
-	}
-	printf("\n");
-	return 0;
+        switch (command)
+        {
+            case 'a':
+                CreateList();
+                break;
+            case 'b':
+                PrintList();
+                break;
+            case 'c':
+                printf("enter the value you want to search: ");
+                scanf("%d",&value);
+                int position= SearchItem(value);
+                if(position!=-1)
+                    printf("the value you searched is in the position %d\n", position);
+                else
+                    printf("the value you searched is not in the list.\n");
+                break;
+            case 'd':
+                if(list!=NULL){
+                int min=MinValue();
+                printf("minimum value in the list is %d\n",min);}
+                else
+                    printf("List is empty.\n");
+                break;
+            case 'e':
+                int sum= SumList(list);
+                printf("The sum of the elements is %d\n",sum);
+                break;
+            case 'f':
+                RecursivePrintList(list);
+                break;
+            case 'g':
+                ReversePrintList(list);
+                break;
+            case 'h':
+                CopyList(list);
+                break;
+            case 'l':
+                list=DestroyList(list);
+                printf("The list destroyed.\n");
+                break;
+            case 'x':
+                exit = 1;
+                break;
+            default:
+                printf("Command is not recognized!\n");
+                break;
+        }
+    }
+    printf("\n");
+    return 0;
 }
 
 /*Make an empty Linked List*/
-void MakeEmpty(void)
-{
-    head=list=tail=NULL;
-     PrintList();
+void MakeEmpty(void){
+    list=head=tail=NULL;
+    length=0;
 }
 
 /*Create a Linked List*/
-void CreateList(void)
-{
-     struct Node *tmp;
+void CreateList(void){
+    MakeEmpty();
+    int n,size;
 
-     list=NULL;
-     head=NULL;
-     tail=NULL;
-
-     int n,value;
-     printf("How many elements you want to enter? ");
-     scanf("%d",&n);
-
-     for(int i=0;i<n;i++) {
-         tmp = malloc(sizeof(struct Node *));
-         if (tmp == NULL) {
-             printf("not enough memory ");
-             exit(0);
-         }
-         if (list == NULL) {
-             printf("enter the value:  ");
-             scanf("%d", &value);
-             tmp->item = value;
-             tmp->next = NULL;
-             tail = tmp;
-             list = tmp;
-             head = tmp;
-
-         } else {
-             printf("enter the value: ");
-             scanf("%d", &value);
-             tmp->item = value;
-             tmp->next = NULL;
-             tail->next = tmp;
-             tail = tmp;
-         }
-         length++;
-     }
-     PrintList();
+    printf("Enter number of elements: ");
+    scanf("%d",&size);
+    for(int i=0;i<size;i++) {
+        printf("enter the value: ");
+        scanf("%d", &n);
+        InsertNode(n);
+    }
 }
 
 /*Insert a node to Linked List*/
-void InsertNode(int num)
-{
-     struct Node *temp;
-     temp= malloc(sizeof (struct Node *));
-     if(temp==NULL){
-         printf("The node can not created!");
-     }
-     temp->next=NULL;
-     temp->item=num;
-
-     if(list==NULL){
-         list=temp;
-         head=tail=temp;
-     }
-     else{
-         tail->next=temp;
-         tail=temp;
-     }
-     length++;
-     PrintList();
+void InsertNode(int num){
+    struct Node *tmp;
+    tmp=(struct Node *)malloc(sizeof (struct Node));
+    if(tmp==NULL){
+        printf("error allocating memory");
+        exit(1);
+    }
+    tmp->item=num;
+    tmp->next=NULL;
+    if(list==NULL){
+        head=tmp;
+        tail=tmp;
+        list=tmp;
+    }
+    else{
+        tail->next=tmp;
+        tail=tmp;
+    }
+    length++;
 }
 
 /*Display the elements of Linked List*/
-void PrintList(void)
+void PrintList(void){
+    struct Node *tmp=list;
+    if(tmp==NULL){
+        printf("List is empty.\n");
+        return;
+    }
+    while(tmp!=NULL){
+        printf("%d",tmp->item);
+        if(tmp->next!=NULL)
+            printf("------>");
+        tmp=tmp->next;
+    }
+    printf("\n");
+}
+
+/*A function that searches a value in a linked list*/
+int SearchItem(int key){
+    struct Node *tmp=list;
+    if(tmp==NULL){
+        printf("List is empty.\n");
+    }
+
+    int track=1;
+    while(tmp!=NULL) {
+        if (tmp->item == key)
+            return track;
+        else
+            track++;
+        tmp=tmp->next;
+    }
+    return -1;
+}
+
+/*A function that traverses a linked list and returns the minimum value*/
+int MinValue(void) {
+    int min;
+    struct Node *tmp = list;
+    min = tmp->item;
+    for (; tmp != NULL; tmp = tmp->next) {
+        if (tmp->item < min)
+            min = tmp->item;
+    }
+    return min;
+}
+
+/*A function that traverses a linked list and returns the sum of the values*/
+int SumList(struct Node *p){
+    p=list;
+    int sum=0;
+    for(;p!=NULL;p=p->next){
+        sum+=p->item;
+    }
+    return sum;
+}
+
+/*A function that prints the elements of a given linked list by using recursion*/
+void RecursivePrintList(struct Node *p){
+
+    struct Node *tmp=p;
+    if(tmp==NULL){
+        printf("\n");
+        return;}
+
+    printf("%d",tmp->item);
+    if(tmp->next!=NULL)
+        printf("------->");
+    RecursivePrintList(tmp->next);
+}
+
+/*A function that prints the elements of a given linked list in reverse order by
+using recursion*/
+/* A function that prints the elements of a given linked list in reverse order using recursion */
+void ReversePrintList(struct Node *p)
 {
-     struct Node *p;
-	for(p=head;p!=NULL;p=p->next){
-         printf("%d",p->item);
-         if(p->next!=NULL)
-             printf("----->");
-     }
-     printf("\n");
+    if (p == NULL) {
+        return;  // Base case: end of the list, do nothing
+    }
+
+    ReversePrintList(p->next);  // Recursive call to reach the end of the list first
+    printf("%d", p->item);  // Print the current node's item as the call stack unwinds
+
+    if (p != list) {  // Add arrow if this is not the first node in the list (which prints last in reverse)
+        printf(" <------- ");
+    } else {
+        printf("\n");  // Print newline at the end
+    }
 }
 
 
-/*A function that searches a value in a linked list*/ int SearchItem(int key) {
-     struct Node *temp;
-     int i=0;
-
-     for(temp=head;temp!=NULL;temp=temp->next){
-         if(temp->item==key)
-             return i;
-         else
-             i++;
-     }
-     return -1;
-
-}
-
-/*A function that traverses a linked list and returns the minimum value*/ int MinValue(void) {
-  	struct Node *tmp;
-      tmp=head;
-      int min=tmp->item;
-
-      for(tmp=head;tmp!=NULL;tmp=tmp->next){
-          if(tmp->item<min)
-              min=tmp->item;
-      }
-      return min;
-
-}
-
-/*A function that traverses a linked list and returns the sum of the values*/ int SumList(struct Node *p) {
-  	//TO BE COMPLETED
-}
-
-/*A function that prints the elements of a given linked list by using recursion*/ void RecursivePrintList(struct Node *p) {
-  	//TO BE COMPLETED
-}
-
-/*A function that prints the elements of a given linked list in reverse order by using recursion*/ void ReversePrintList(struct Node *p) {
-  	//TO BE COMPLETED
-}
-
-/*A function that takes a linked list and makes a copy of it - This function returns the pointer to the first element of the list as a result.*/ struct Node* CopyList(struct Node *p) {
-  	//TO BE COMPLETED
-}
-
-struct Node* RecursiveCopyList(struct Node *p) {
-  	//TO BE COMPLETED
-}
-
-/*A function that traverses a linked list and frees the memory occupied by the list elements one element at a time*/ struct Node* DestroyList(struct Node *p) {
-  	//TO BE COMPLETED
-}
-
-/*A function that takes a linked list and creates a new linked list where the elements of the original list appear in reverse order in the new list*/ struct Node* ReverseList(struct Node *p) {
-  	//TO BE COMPLETED
-}
-
-struct Node* RecursiveReverseList(struct Node *ptr, struct Node
-*previous)
+/*A function that takes a linked list and makes a copy of it - This function
+returns the pointer to the first element of the list as a result.*/
+struct Node* CopyList(struct Node *p)
 {
-  	//TO BE COMPLETED
+    struct Node *tmp=(struct Node *) malloc(sizeof (struct Node));
+    if(tmp==NULL){
+        printf("error allocating memory.\n");
+        exit(1);
+    }
+
+    while(p!=NULL){
+        struct Node *newnode=(struct Node *) malloc(sizeof (struct Node));
+        newnode->item=p->item;
+        newnode->next=NULL;
+        p=p->next;
+        tmp->next=newnode;
+        tmp=newnode;
+
+
+
+
+    }
+    return tmp;
 }
 
-/*A function that calculates the inner product of two linked lists*/ int inner_product(struct Node *list1, struct Node *list2) {
-  	//TO BE COMPLETED
+struct Node* RecursiveCopyList(struct Node *p)
+{
+    //TO BE COMPLETED
 }
+
+/*A function that traverses a linked list and frees the memory occupied by the
+list elements one element at a time*/
+struct Node* DestroyList(struct Node *p)
+{
+    struct Node *tmp;
+    while(p!=NULL){
+        tmp=p;
+        tmp=tmp->next;
+        free(tmp);
+    }
+    return NULL;
+}
+
+/*A function that takes a linked list and creates a new linked list where the
+elements of the original list appear in reverse order in the new list*/
+struct Node* ReverseList(struct Node *p)
+{
+    //TO BE COMPLETED
+}
+
+struct Node* RecursiveReverseList(struct Node *ptr, struct Node *previous)
+{
+    //TO BE COMPLETED
+}
+
+/*A function that calculates the inner product of two linked lists*/
+int inner_product(struct Node *list1, struct Node *list2)
+{
+    //TO BE COMPLETED
+}
+
+
+
+
+
+
+
