@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct FriendNode{
+    char name[100];
+    int age;
+    int array[5];
+    struct FriendNode *next;
+};
+
+typedef struct FriendNode *Friend;
+struct FriendNode *addFriends(Friend p);
+void displayPopular(Friend p);
+
+
+int main(){
+
+    char command;
+    int exit=0;
+    Friend List=NULL;
+
+    while(!exit){
+
+        fflush(stdin);
+        printf("1. Add a friend\n");
+        printf("2. Display popular friend\n");
+        printf("3. Exit\n");
+        printf("Enter command: \n");
+        scanf(" %c",&command);
+        fflush(stdin);
+
+        switch (command) {
+            case '1':
+                List=addFriends(List);
+                break;
+            case '2':
+                displayPopular(List);
+                break;
+            case '3':
+                exit=1;
+                break;
+            default:
+                printf("Command not recognized.\n");
+                break;
+
+        }
+    }
+
+    free(List);
+    return 0;
+}
+
+struct FriendNode *addFriends(Friend p){
+
+    char name[100];
+
+    Friend tmp=(struct FriendNode *) malloc(sizeof (struct FriendNode));
+    if(tmp==NULL){
+        printf("Error allocating memory.");
+        exit(1);
+    }
+    printf("Please enter your friend's name: ");
+    scanf("%s",name);
+    Friend current=p;
+    while(current!=NULL){
+        if(strcmp(name,current->name)==0){
+            printf("The name you entered is already on the list.\n");
+            free(current);
+            free(tmp);
+            return p;
+        }
+        current=current->next;
+    }
+
+    strcpy(tmp->name,name);
+
+    printf("Please enter your friend's age: ");
+    if(scanf("%d",&tmp->age)!=1){
+        printf("Invalid input for age.\n");
+        free(tmp);
+        return p;
+    }
+
+    printf("Please enter the likes in the last five months.\n");
+
+    for(int i=0;i<5;i++){
+        if(scanf("%d",&tmp->array[i])!=1){
+            printf("Invalid input for likes.\n");
+            free(tmp);
+            return p;
+        }
+    }
+
+    tmp->next=p;
+    return tmp;
+
+}
+
+void displayPopular(Friend p) {
+
+    int total = 0;
+    Friend mostpopular = NULL;
+
+    if (p == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+    printf("Friend list\n");
+    printf("--------------\n");
+
+    while (p != NULL) {
+
+        int sum = 0;
+        printf("Name: %s Age: %d Likes for month:\n", p->name, p->age);
+        for (int i = 0; i < 5; i++) {
+            printf(" %d: %d ", i + 1, p->array[i]);
+            sum += p->array[i];
+        }
+        printf("\n");
+
+        if (sum > total) {
+            total = sum;
+            mostpopular = p;
+        }
+        p = p->next;
+
+    }
+    printf("\n");
+    if (mostpopular != NULL) {
+        printf("Most popular friend\n");
+        printf("Name: %s Age: %d Total Likes: %d \n",mostpopular->name,mostpopular->age,total);
+    }
+    free(mostpopular);
+}
