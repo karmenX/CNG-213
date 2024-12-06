@@ -1,35 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
+#include "queue_linked.h"
 
 int main()
 {
-    int queueSize;
     Queue myQueue;
     int exit, val;
     char command;
 
-    printf("Enter queue size: ");
-    scanf("%d", &queueSize);
-    myQueue = CreateQueue(queueSize);
+    myQueue = CreateQueue();
 
     exit = FALSE;
 
     while (!exit)
     {
         fflush(stdin);
-        printf("Enter command "
-               "i)nitialize "
-               "e)nqueue "
-               "d)equeue "
-               "f)ront queue "
-               "r)ear queue "
-               "t)erminate: ");
-
+        printf("Enter command i)nitialize e)nqueue d)equeue f)ront queue r)ear queue t)erminate: ");
         scanf("%c", &command);
         fflush(stdin);
 
-        switch(command)
+        switch (command)
         {
             case 'i':
                 MakeEmptyQueue(myQueue);
@@ -41,6 +31,7 @@ int main()
                 break;
             case 'd':
                 val = Dequeue(myQueue);
+                printf("\nRemoved element is %d \n",val);
                 break;
             case 'f':
                 val = FrontOfQueue(myQueue);
@@ -55,18 +46,14 @@ int main()
             case 't':
                 exit = TRUE;
                 break;
-
             default:
                 printf("command not recognized\n");
                 break;
         }
         DisplayQueue(myQueue);
-
     }
-
-    printf("\n\n");
+    printf("\n");
     system("PAUSE");
     return 0;
 }
-
 
