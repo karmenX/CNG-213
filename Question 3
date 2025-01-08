@@ -1,0 +1,162 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MIN_STACK_SIZE 5
+#define FALSE 0
+#define TRUE 1
+
+struct StackRecord {
+    int capacity;
+    int topOfStack;
+    int *array;
+};
+
+typedef struct StackRecord *Stack;
+
+Stack CreateStack(int);
+void MakeEmptyStack(Stack);
+void PushStack(int, Stack);
+int PopStack(Stack);
+int TopOfStack(Stack);
+int IsFullStack(Stack);
+int IsEmptyStack(Stack);
+void DisplayStack(Stack);
+int reverse(Stack);
+
+int main() {
+    int stackSize;
+    Stack myStack;
+    int exit = FALSE, val;
+    char command;
+
+    printf("Enter stack size: ");
+    scanf("%d", &stackSize);
+    myStack = CreateStack(stackSize);
+
+    if (myStack == NULL) {
+        exit = TRUE;
+    }
+
+    while (!exit) {
+        printf("\n(i)nitialize\n");
+        printf("(p)ush\n");
+        printf("(r)emove (pop)\n");
+        printf("(t)op of stack\n");
+        printf("(R)everse order\n");
+        printf("(e)xit\n");
+        printf("Enter command: ");
+        scanf(" %c", &command);  // Added space before %c to consume newline
+
+        switch (command) {
+            case 'i':
+                MakeEmptyStack(myStack);
+                break;
+            case 'p':
+                printf("Enter numbers (EOF to stop):\n");
+                while (scanf("%d", &val) == 1) {
+                    PushStack(val, myStack);
+                }
+                break;
+            case 'r':
+                if (!IsEmptyStack(myStack)) {
+                    val = PopStack(myStack);
+                    printf("Popped value: %d\n", val);
+                }
+                break;
+            case 't':
+                val = TopOfStack(myStack);
+                if (val != -1) {
+                    printf("Top element is %d\n", val);
+                }
+                break;
+            case 'R':
+                reverse(myStack);
+                break;
+            case 'e':
+                exit = TRUE;
+                break;
+            default:
+                printf("Command not recognized\n");
+                break;
+        }
+        DisplayStack(myStack);
+    }
+
+    printf("\n\n");
+    return 0;
+}
+
+Stack CreateStack(int maxElements) {
+    if (maxElements < MIN_STACK_SIZE) {
+        printf("Element number is too small to create a stack\n");
+        exit(1);
+    }
+
+    Stack s = malloc(sizeof(struct StackRecord));
+    if (s == NULL) {
+        printf("Error allocating memory\n");
+        exit(1);
+    }
+
+    s->array = malloc(sizeof(int) * maxElements);
+    if (s->array == NULL) {
+        printf("Error allocating memory for the array\n");
+        exit(1);
+    }
+
+    s->capacity = maxElements;
+    MakeEmptyStack(s);
+    return s;
+}
+
+void MakeEmptyStack(Stack s) {
+    s->topOfStack = -1;
+}
+
+int IsEmptyStack(Stack s) {
+    return s->topOfStack == -1;
+}
+
+int IsFullStack(Stack s) {
+    return s->topOfStack == s->capacity - 1;
+}
+
+void PushStack(int x, Stack s) {
+    if (IsFullStack(s)) {
+        printf("Stack is full.\n");
+        exit(1);
+    }
+    s->array[++s->topOfStack] = x;
+}
+
+int PopStack(Stack s) {
+    if (IsEmptyStack(s)) {
+        printf("Error. Stack is empty\n");
+        exit(1);
+    }
+    return s->array[s->topOfStack--];
+}
+
+int TopOfStack(Stack s) {
+    if (!IsEmptyStack(s)) {
+        return s->array[s->topOfStack];
+    } else {
+        printf("The stack is empty\n");
+        return -1;
+    }
+}
+
+void DisplayStack(Stack s) {
+    printf("Stack content:\n");
+    for (int i = s->topOfStack; i >= 0; i--) {
+        printf("\t--> %d\n", s->array[i]);
+    }
+}
+
+int reverse(Stack s) {
+    printf("Reverse order:");
+    while (!IsEmptyStack(s)) {
+        printf(" %d", PopStack(s));
+    }
+    printf("\n");
+}
