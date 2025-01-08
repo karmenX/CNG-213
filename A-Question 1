@@ -1,0 +1,206 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define FALSE 0
+#define TRUE 1
+
+struct Node
+{
+    int val;
+    struct Node *next;//forward link
+    struct Node *prev;//backward link
+};
+
+struct ListRecord
+{
+    struct Node *head;
+    struct Node *tail;
+    int length;
+};
+typedef struct ListRecord *DoubleList;
+
+DoubleList CreateList(int);
+void MakeEmptyList(DoubleList);
+void InsertListAtPosition(DoubleList, int, int);
+void DisplayList(DoubleList);
+void DeleteListAtPosition(int, DoubleList);
+int IsEmptyList(DoubleList);
+void BrowseForward(DoubleList);
+void BrowseBackward(DoubleList);
+
+int main()
+{
+    DoubleList myList;
+    int exit, val, pos;
+    char command;
+    exit = FALSE;
+
+    myList = CreateList(0);
+
+    while (!exit)
+    {
+        fflush(stdin);
+        printf("\nMenu: \n i)nitialize\n n)ew element\n d)elete element\n r)everse order\n e(x)it\nEnter command: ");
+        scanf("%c", &command);
+        fflush(stdin);
+
+        switch (command)
+        {
+            case 'i':
+                MakeEmptyList(myList);
+                break;
+            case 'n':
+                printf("enter value: ");
+                scanf("%d", &val);
+                printf("enter position: ");
+                scanf("%d", &pos);
+                InsertListAtPosition(myList, pos, val);
+                break;
+            case 'd':
+                printf("enter position: ");
+                scanf("%d",&pos);
+                DeleteListAtPosition(pos,myList);
+                break;
+            case 'r':
+                BrowseBackward(myList);
+                break;
+            case 'x':
+                exit = TRUE;
+                break;
+            default:
+                printf("command not recognized\n");
+                break;
+        }
+        printf("\n");
+        DisplayList(myList);
+
+    }
+
+    printf("\n");
+    system("PAUSE");
+    return 0;
+}
+
+DoubleList CreateList(int size)
+{
+    DoubleList l;
+
+    l = (struct ListRecord *) malloc(sizeof(struct ListRecord));
+    if (l == NULL){
+        printf("Out of memory!\n");
+        return NULL;
+    }
+    else{
+        MakeEmptyList(l);
+        return l;
+    }
+}
+
+void MakeEmptyList(DoubleList l)
+{
+    l->head= malloc(sizeof (struct Node));
+    if(l->head==NULL){
+        printf("Error creating a node.\n");
+    }
+    else{
+        l->head->next=NULL;
+        l->head->prev=NULL;
+        l->tail=l->head;
+        l->length=0;
+    }
+
+}
+
+void InsertListAtPosition(DoubleList l, int pos, int val)
+{
+    struct Node *insert= malloc(sizeof (struct Node));
+
+    if(insert==NULL){
+        printf("Error allocating an insert node\n");
+    }
+    else{
+        insert->val=val;
+        insert->next=NULL;
+        insert->prev=NULL;
+        if(pos>l->length+1) { //if the wanted position to insert the new element is 1 bigger than the list size
+            pos = l->length + 1;//set position to list size+1
+            // means we want to insert like position at 10 but since there is no position 10 we set the pos to be the last element+1(l->size+1) so that we can insert it at the end
+        }
+        if(pos==l->length+1){ //if we want to insert it at the end directly
+            insert->prev=l->tail;
+            l->tail->next=insert;
+            l->tail=insert;
+        }
+        else{ //we want to insert in the middle
+            struct Node *current=l->head;
+            if(current==NULL){
+                printf("Error allocating temporary node.\n");
+            }
+            for(int i=1;i<pos;i++){
+                current=current->next;
+            }
+            insert->prev=current;
+            insert->next=current->next;
+            current->next=insert;
+            insert->next->prev=insert;
+
+
+        }
+        l->length++;
+    }
+}
+
+void DisplayList(DoubleList l)
+{
+    struct Node *p;
+
+    p = l->head->next;
+    printf("List content:\n");
+
+    while (p != NULL)
+    {
+        printf("--> %d\t", p->val);
+        p = p->next;
+    }
+}
+
+void DeleteListAtPosition(int pos, DoubleList l){
+
+    int deleted_value;
+    struct Node *remove;
+
+    if(pos>l->length)
+        pos=l->length;
+    if(pos==l->length){
+
+        remove=l->tail;
+        remove->prev->next=NULL;
+        l->tail=remove->prev;
+        printf("Deleted value is %d at position %d",remove->val,pos);
+        free(remove);
+    }
+    else{
+        struct Node *current=l->head;
+        for(int i=1;i<pos;i++){
+            current=current->next;
+        }
+        remove=current->next;
+        current->next=current->next->next;
+        remove->next->prev=current;
+        deleted_value=remove->val;
+        printf("Deleted value is %d at position %d",deleted_value,pos);
+        free(remove);
+
+    }
+    l->length--;
+
+}
+void BrowseBackward(DoubleList l){
+
+    struct Node *tmp=l->tail;
+    printf("Reverse order is: ");
+    while(tmp!=l->head){
+        printf("%d-->",tmp->val);
+        tmp=tmp->prev;
+    }
+}
