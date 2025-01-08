@@ -1,1 +1,194 @@
+MAIN
+----------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include "stack.h"
+
+int main()
+{
+    Stack myStack;
+    int exit, val;
+    char command;
+
+    myStack = CreateStack(MIN_STACK_SIZE);
+
+    exit = FALSE;
+
+    while (!exit)
+    {
+        fflush(stdin);
+        printf("Enter command i)nitialize p)ush r)emove (pop) t)op of stack e)xit: ");
+        scanf("%c", &command);
+        fflush(stdin);
+
+        switch (command)
+        {
+            case 'i':
+                MakeEmptyStack(myStack);
+                break;
+            case 'p':
+                printf("enter value: ");
+                scanf("%d", &val);
+                PushStack(val, myStack);
+                break;
+            case 'r':
+                if (IsEmptyStack(myStack))
+                    printf("The stack is empty!\n");
+                else
+                    val = PopStack(myStack);
+                printf("Pop value from stack = %d\n", val);
+                break;
+            case 't':
+                val = TopOfStack(myStack);
+                if (val != -1)
+                    printf("top element is %d\n", val);
+                break;
+            case 'e':
+                exit = TRUE;
+                break;
+            default:
+                printf("command not recognized\n");
+                break;
+        }
+        DisplayStack(myStack);
+    }
+
+    printf("\n");
+    system("PAUSE");
+    return 0;
+}
+
+//This function initialises a stack with a dummy node
+Stack CreateStack()
+{
+    Stack s= malloc(sizeof (struct Node));
+    if(s==NULL){
+        printf("Error allocating memory.\n");
+    }
+    s->next=NULL;
+    return s;
+}
+
+//This function empties the content of a stack
+void MakeEmptyStack(Stack s)
+{
+    if(s->next!=NULL){
+        while(!IsEmptyStack(s))
+            PopStack(s);
+    }
+}
+
+//This function checks if a stack is empty or not
+int IsEmptyStack(Stack s)
+{
+    if(s->next==NULL)
+        return 1;
+    else
+        return 0;
+}
+
+//This function checks if a stack is full
+int IsFullStack(Stack s)
+{
+    return FALSE;
+}
+
+//This function creates a new node, adds the value of x to this node
+//and then pushes this new node to the given stack
+void PushStack(int x, Stack s)
+{
+    Stack new_node= malloc(sizeof(struct Node));
+    if(new_node==NULL) {
+        printf("Error allocating new node.\n");
+    }
+    else {
+        new_node->val = x;
+        new_node->next = s->next;
+        s->next = new_node;
+    }
+
+}
+
+//This function pops the top node from the stack frees the memory location
+//of that node and returns the value stored in that top node
+int PopStack(Stack s)
+{
+    Stack remove_node;
+    int popval;
+    if(IsEmptyStack(s))
+        printf("Error. Stack is empty\n");
+    else{
+        remove_node=s->next;
+        popval= remove_node->val;
+        s->next=remove_node->next;
+        free(remove_node);
+        return popval;
+    }
+}
+
+//This function returns the value stored at the top node
+int TopOfStack(Stack s)
+{
+    if(!IsEmptyStack(s))
+    return s->next->val;
+    else{
+        printf("Stack s empty\n");
+        return EMPTY_TOS;
+    }
+}
+
+//This function displays the content of a stack
+void DisplayStack(Stack s)
+{
+    struct Node *p;
+    printf("Stack content:\n");
+    if (IsEmptyStack(s))
+        printf("The stack is empty!\n");
+    else{
+        p = s->next;
+        while (p != NULL)
+        {
+            printf("\t--> %d\n", p->val);
+            p = p->next;
+        }
+    }
+}
+
+
+STACK.H
+----------------------
+//
+// Created by yagmu on 1/8/2025.
+//
+
+#ifndef STUDY_STACK_H
+#define STUDY_STACK_H
+//To represent an empty stack, EMPTY_TOS -1 is used
+#define EMPTY_TOS -1
+#define MIN_STACK_SIZE 5
+#define FALSE 0
+#define TRUE 1
+
+//Node declaration that will be used to store data in a stack
+struct Node
+{
+    int val;
+    struct Node *next;
+};
+
+//Declaration of a stack node
+typedef struct Node StackRecord;
+typedef StackRecord *Stack;
+
+//Function signatures
+Stack CreateStack();
+void MakeEmptyStack(Stack);
+void PushStack(int, Stack);
+int PopStack(Stack);
+int TopOfStack(Stack);
+int IsEmptyStack(Stack);
+void DisplayStack(Stack);
+
+
+#endif //STUDY_STACK_H
 
