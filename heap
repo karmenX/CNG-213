@@ -1,0 +1,227 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define MIN_PRIORITY_QUEUE_SIZE 16
+#define FALSE 0
+#define TRUE 1
+
+struct HeapStruct
+{
+    int capacity;
+    int size;
+    int *elements;
+};
+typedef struct HeapStruct *PriorityQueue;
+
+PriorityQueue InitializePriorityQueue(int);
+void DestroyPriorityQueue(PriorityQueue);
+void MakeEmptyPriorityQueue(PriorityQueue);
+void InsertPriorityQueue(int, PriorityQueue);
+int DeletePriorityQueue(PriorityQueue);
+int FindMinPriorityQueue(PriorityQueue);
+int IsEmptyPriorityQueue(PriorityQueue);
+int IsFullPriorityQueue(PriorityQueue);
+void DisplayPriorityQueue(PriorityQueue);
+
+PriorityQueue BuildPriorityQueue(int, int[]);
+void Heapify(int[], int, int);
+
+int main()
+{
+    PriorityQueue myQueue;
+    int exit, val, size;
+    char command;
+    int initQueue[] = { 92, 47, 21, 20, 12, 45, 63, 61, 17, 55, 37, 25, 64, 83, 73 };
+
+    exit = FALSE;
+    while (!exit)
+    {
+        fflush(stdin);
+        printf("\nEnter command\n i)nitialize\n b)uild heap\n n)ew element\n d)elete min\n f)ind min\n m)ake empty\n s)how queue\n e)xit\n Command: ");
+        scanf("%c", &command);
+        fflush(stdin);
+
+        switch (command)
+        {
+            case 'i':
+                printf("Please enter size of queue: ");
+                scanf("%d", &size);
+                myQueue = InitializePriorityQueue(size);
+                break;
+            case 'n':
+                printf("enter value: ");
+                scanf("%d", &val);
+                InsertPriorityQueue(val, myQueue);
+                DisplayPriorityQueue(myQueue);
+                break;
+            case 'b':
+                myQueue = BuildPriorityQueue(15, initQueue);
+                DisplayPriorityQueue(myQueue);
+                break;
+            case 'd':
+                val = DeletePriorityQueue(myQueue);
+                printf("Removed smallest element %d\n", val);
+                DisplayPriorityQueue(myQueue);
+                break;
+            case 'f':
+                val = FindMinPriorityQueue(myQueue);
+                printf("Smallest element is %d\n", val);
+                break;
+            case 'm':
+                MakeEmptyPriorityQueue(myQueue);
+                DisplayPriorityQueue(myQueue);
+                break;
+            case 's':
+                DisplayPriorityQueue(myQueue);
+                break;
+            case 'e':
+                exit = TRUE;
+                break;
+            default:
+                printf("command not recognized\n");
+                break;
+        }
+    }
+    printf("\n\n");
+    system("PAUSE");
+    return 0;
+}
+
+PriorityQueue InitializePriorityQueue(int maxElements)
+{
+    PriorityQueue h;
+
+    if (maxElements < MIN_PRIORITY_QUEUE_SIZE){
+        printf("Priority queue size is too small!\n");
+        return NULL;
+    }
+    h = (PriorityQueue)malloc(sizeof(struct HeapStruct));
+
+    if (h == NULL){
+        printf("Out of memory space!!!\n");
+        return NULL;
+    }
+
+    h->elements = malloc((maxElements + 1) * sizeof(int));
+    if (h->elements == NULL){
+        printf("Out of memory space!!!\n");
+        free (h);
+        return NULL;
+    }
+
+    h->capacity = maxElements;
+    h->size = 0;
+    h->elements[0] = INT_MIN;
+
+    return h;
+}
+
+void MakeEmptyPriorityQueue(PriorityQueue h)
+{
+    h->size = 0;
+}
+
+int IsEmptyPriorityQueue(PriorityQueue h)
+{
+    return h->size == 0;
+}
+
+int IsFullPriorityQueue(PriorityQueue h)
+{
+    return h->size == h->capacity;
+}
+
+void DestroyPriorityQueue(PriorityQueue h)
+{
+    free(h->elements);
+    free(h);
+}
+
+void DisplayPriorityQueue(PriorityQueue h)
+{
+    int i;
+    for (i = 1; i <= h->size; i++)
+        printf("--> %d\n", h->elements[i]);
+}
+
+int FindMinPriorityQueue(PriorityQueue h)
+{
+    //TO BE COMPLETED!
+}
+
+void InsertPriorityQueue(int val, PriorityQueue h)
+{
+    int i;
+    if(IsFullPriorityQueue(h)){
+        printf("Priority Queue is full.\n");
+        exit(1);
+    }
+    for(i=h->size+1;h->elements[i/2]>val;i/=2)
+        h->elements[i]=h->elements[i/2];
+    h->elements[i]=val;
+    h->size++;
+}
+
+int DeletePriorityQueue(PriorityQueue h)
+{
+   int i, child;
+   int min_element,last_element;
+   if(IsEmptyPriorityQueue(h)){
+       printf("Priority queue is empty.\n");
+       exit(1);
+   }
+   min_element=h->elements[1];
+   last_element=h->elements[h->size--];
+   for(int i=1; i*2<=h->size; i=child) {
+       child = i * 2; //find smaller child
+       if ((child != h->size) && (h->elements[child + 1] < h->elements[child]))
+           child++;
+       //percolate one level
+       if (last_element > h->elements[child])
+           h->elements[i] = h->elements[child];
+       else
+           break;
+   }
+   h->elements[i]=last_element;
+
+}
+
+PriorityQueue BuildPriorityQueue(int n, int a[])
+{
+    PriorityQueue h;
+    int i;
+
+    h = (PriorityQueue)malloc(sizeof(struct HeapStruct));
+    if (h == NULL){
+        printf("Out of memory space!!!\n");
+        return NULL;
+    }
+
+    h->elements = malloc((n + 1) * sizeof(int));
+    if (h->elements == NULL){
+        printf("Out of memory space!!!\n");
+        free(h);
+        return NULL;
+    }
+
+    h->capacity = n;
+    h->size = n;
+    h->elements[0] = INT_MIN;
+
+    for (i = 0; i<n; i++)
+    {
+        h->elements[i + 1] = a[i];
+        printf("%d\n", h->elements[i + 1]);
+    }
+
+    for (i = n / 2; i>0; i--){
+        Heapify(h->elements, i, n);
+    }
+    return h;
+}
+
+void Heapify(int a[], int rootIndex, int heapSize)
+{
+    //TO BE COMPLETED!
+}
