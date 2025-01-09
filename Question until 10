@@ -1,0 +1,278 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_ELEMENTS 16
+#define FALSE 0
+#define TRUE 1
+
+/*A tree Node declaration*/
+struct Node
+{
+    int val;
+    struct Node* left;
+    struct Node* right;
+};
+typedef struct Node *Tree;
+
+
+/*Function signatures*/
+Tree CreateTree(void);
+Tree MakeEmptyTree(Tree);
+Tree InsertElement(int, Tree);
+void DisplayTree(Tree);
+void PrintBinaryTreeStructure(Tree t, int);
+int IterativeFindMinimum(Tree);
+int IterativeFindMaximum(Tree);
+struct Node *RecursiveFindMinimum(Tree t);
+struct Node *RecursiveFindMaximum(Tree t);
+struct Node *findElement(Tree, int );
+struct Node *DeleteBinarySearchTree(Tree, int);
+
+int main()
+{
+    Tree myTree, pos;
+    int exit, val, height;
+    char command;
+
+
+    myTree = CreateTree();
+    exit = FALSE;
+
+    while (!exit)
+    {
+        fflush(stdin);
+        printf("\nMenu:\n i)nitialize\n n)ew element \n m)inimum number(iterative)\n M)aximum number(iterative)\n N)Find minimum number(recursive)\n "
+               "F)ind maximum number(recursive)\n"
+               "f)ind element\n"
+               "d)elete number\n"
+               " e)xit\nEnter command: ");
+        scanf("%c", &command);
+        fflush(stdin);
+
+        switch(command)
+        {
+            case 'i':
+                myTree = MakeEmptyTree(myTree);
+                break;
+            case 'n':
+                printf("enter value: ");
+                scanf("%d", &val);
+                myTree = InsertElement(val, myTree);
+                PrintBinaryTreeStructure(myTree,0);
+                break;
+            case 'm':
+                int min;
+                min=IterativeFindMinimum(myTree);
+                printf("Minimum number is %d\n",min);
+                break;
+            case 'M':
+                int max;
+                max=IterativeFindMaximum(myTree);
+                printf("Maximum number is %d\n",max);
+                break;
+            case 'N':
+               struct Node *Min;
+                Min =RecursiveFindMinimum(myTree);
+                printf("Minimum number is %d\n",Min->val);
+                break;
+            case 'F':
+                struct Node *Max;
+                Max =RecursiveFindMaximum(myTree);
+                printf("Maximum number is %d\n",Max->val);
+                break;
+            case 'f':
+                int element;
+                struct Node *found;
+                printf("Enter the element you want to find: ");
+                scanf("%d",&element);
+                found=findElement(myTree,element);
+                if(found!=NULL){
+                    printf("Your element is in the tree.\n");
+                }
+                else
+                    printf("Your element is not in the tree.\n");
+                break;
+            case 'd':
+                printf("Enter element you want to delete: ");
+                scanf("%d",&element);
+                DeleteBinarySearchTree(myTree,element);
+                printf("Tree is now: \n");
+                PrintBinaryTreeStructure(myTree,0);
+                break;
+            case 'e':
+                exit = TRUE;
+                break;
+            default:
+                printf("command not recognized\n");
+                break;
+        }
+
+
+
+    }
+
+    printf("\n\n");
+    system("PAUSE");
+    return 0;
+}
+
+/*Function that mainly creates a tree which is initially NULL*/
+Tree CreateTree(void)
+{
+    return NULL;
+}
+
+/*Function that takes a tree and makes it an empty tree by removing all the nodes from that tree*/
+Tree MakeEmptyTree(Tree t)
+{
+    if (t != NULL)
+    {
+        MakeEmptyTree(t->left);
+        MakeEmptyTree(t->right);
+        free(t);
+    }
+    return NULL;
+}
+
+/*This function takes an integer value and a tree,
+  and inserts that value to the tree*/
+Tree InsertElement(int val, Tree t)
+{
+    if(t==NULL){
+        t= malloc(sizeof(struct Node));
+        if(t==NULL){
+            printf("Error allocating memory.\n");
+        }
+        else {
+            t->val = val;
+            t->left = NULL;
+            t->right = NULL;
+        }
+    }
+    else if(val<t->val){
+        t->left=InsertElement(val,t->left);
+    }
+    else if(val>t->val)
+        t->right=InsertElement(val,t->right);
+    else
+        printf("Number is already in the tree.\n");
+
+    return t;
+}
+
+/*This function takes a tree and displays its content on the screen*/
+void DisplayTree(Tree t)
+{
+    if (t !=NULL)
+    {
+        DisplayTree(t->left);
+        printf("%d\n", t->val);
+        DisplayTree(t->right);
+    }
+}
+void PrintBinaryTreeStructure(Tree t, int depth) {
+    int i;
+
+    if (t != NULL) {
+        PrintBinaryTreeStructure(t->right, depth + 1);
+
+        for (i = 0; i < depth; i++)
+            printf("   ");
+        printf("%d\n", t->val);
+
+        PrintBinaryTreeStructure(t->left, depth + 1);
+    }
+}
+
+int IterativeFindMinimum(Tree t){
+
+    int min;
+    struct Node *minimum= t;
+    while(minimum->left!=NULL){
+        minimum=minimum->left;
+    }
+    min=minimum->val;
+    return min;
+
+}
+
+int IterativeFindMaximum(Tree t){
+
+    int max;
+    struct Node *maximum= t;
+    while(maximum->right!=NULL){
+        maximum=maximum->right;
+    }
+    max=maximum->val;
+    return max;
+
+}
+
+struct Node *RecursiveFindMinimum(Tree t){
+
+    struct Node *min=t;
+    while(min->left!=NULL){
+       min=RecursiveFindMinimum(min->left);
+    }
+    return min;
+
+}
+
+struct Node *RecursiveFindMaximum(Tree t){
+
+    struct Node *max=t;
+    while(max->right!=NULL){
+       max= RecursiveFindMaximum(max->right);
+    }
+    return max;
+
+}
+
+struct Node *findElement(Tree t, int x){
+
+    if(t==NULL)
+        return NULL;
+
+    if(x==t->val)
+        return t;
+    else if(x<t->val)
+        return findElement(t->left,x);
+    else if(x>t->val)
+        return findElement(t->right,x);
+
+}
+
+struct Node *DeleteBinarySearchTree(Tree t,int x) {
+
+
+    if (x < t->val)
+        t->left = DeleteBinarySearchTree(t->left, x);
+    else if (x > t->val)
+        t->right = DeleteBinarySearchTree(t->right, x);
+    else {
+        if (t->left == NULL && t->right == NULL) {//leaf node
+            free(t);
+            return NULL;
+        } else if (t->right == NULL) {
+            struct Node *tmp = t;
+            t = t->left;
+            free(tmp);
+            return t;
+        } else if (t->left == NULL) {
+            struct Node *tmp = t;
+            t = t->right;
+            free(tmp);
+            return t;
+        } else {
+            struct Node *min = t->right;
+            while (min->left != NULL)
+                min = min->left;
+            t->val = min->val;
+            t->right = DeleteBinarySearchTree(t->right, min->val);
+        }
+
+    }
+    return t;
+
+}
+
